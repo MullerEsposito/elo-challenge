@@ -10,8 +10,6 @@ const root = createRoot(container as Element);
 
 root.render(
   <ChakraProvider theme={theme}>
-    <React.StrictMode>
       <App />
-    </React.StrictMode>
   </ChakraProvider>
 );

@@ -1,5 +1,4 @@
 import { Routes as DOMRoutes, Route } from "react-router-dom"
-import App from "../App";
 import { Home } from "../pages/Home";
 import { LeadsPanel } from "../pages/LeadsPanel";
 import { RegisterLead } from "../pages/RegisterLead";
