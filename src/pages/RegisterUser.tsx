@@ -1,97 +1,80 @@
 import { FormEvent, useState } from "react";
-import { Button, FormControl, FormLabel, Text } from "@chakra-ui/react";
+import { Button, Flex, Image } from "@chakra-ui/react";
 
+import { SaveUserController } from "../modules/users/controllers/SaveUserController";
 import { Input } from "../components/Input";
-import * as ls from "../services/localstorage";
+import { Alert, IAlert } from "../components/Alert";
+import { Fieldset } from "../components/Fieldset";
+
+import logo from "../assets/elo-logo-banner.jpg";
+import { Link } from "react-router-dom";
+import { validations } from "../components/Input/validations";
 
 export function RegisterUser() {
-    const [user, setUser] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmationPassword, setConfirmationPassword] = useState("");
-    const [thereIsNotification, setThereIsNotification] = useState("");
-    
-    
-    const clearRegisterForm = ():void => {
-      const form = [setUser, setPassword, setConfirmationPassword];
-      form.forEach( setState => setState(""));
-    }
-      
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {   
-      e.preventDefault();   
-      try {
-        ls.saveUser({ user, password });
-        clearRegisterForm();
-        setThereIsNotification("Usuário registrado com sucesso!");
-        setTimeout(() => setThereIsNotification(""), 3000);
-        
-      } catch (error: any) {
-        setThereIsNotification(error.message);
-        setTimeout(() => setThereIsNotification(""), 3000);
-      }
-    }
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmationPassword, setConfirmationPassword] = useState("");
+  const [alertMessage, setAlertMessage] = useState<IAlert | null>(null);
   
-    return (
-      <form
-        onSubmit={onSubmit}
-        style={{ flex: 1, width: '100%', margin: '0 auto', padding: '10px'}}
-      >
-        <FormControl
-          as="fieldset"
-          display="flex"
-          flexDirection="column"
-          maxW="400px"
-          m="0 auto"
-          p="10px"
-          border="1px"
-          borderColor="#ccccccab"
-          bg="white"
-        >
-          <FormLabel as="legend" textAlign="center" fontSize="1.5rem">
-            Cadastro de Novo Usuário
-          </FormLabel>
   
-          <Input 
-            name="user" 
-            value={user} 
-            setValue={setUser}
-            errorMessage="O campo usuário é obrigatório!"
-            isRequired 
+  const clearRegisterForm = ():void => {
+    const form = [setUser, setPassword, setConfirmationPassword];
+    form.forEach( setState => setState(""));
+  }
+    
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {   
+    e.preventDefault();   
+    const { status, message } = SaveUserController({ user, password });
+    
+    setAlertMessage({ status, message, setAlertMessage });      
+    if (status === "success") clearRegisterForm();
+  }
+
+  document.title = "EloGroup - Registro de Usuário";
+  return (
+    <Flex as="main" h="100vh" flexDirection="column" alignItems="center" justifyContent="center">
+      <Link to="/">
+        <Image 
+          src={logo} 
+          w="400px" h="140"
+          mb="5"
+          alt="Link para página principal com logo da empresa contendo o nome ELOGROUP"
+        />
+      </Link>
+    
+      <form id="form-user" onSubmit={onSubmit} style={{ width: '100%'}}>
+        <Fieldset label="Cadastro de Usuário">
+          <Input name="user" value={user} setValue={setUser} 
+            validations={[ validations.isRequired("usuário") ]}
+            isRequired
           >
             Usuário:
           </Input>
-          <Input 
-            type="password" 
-            name="password" 
-            value={password} 
-            setValue={setPassword}
+          <Input name="password" type="password" value={password} setValue={setPassword}
             validations={[
-              { regex: /.+/, description: "O campo senha é obrigatório!" },
-              { regex: /\d/, description: "Deve conter ao menos um dígito!" },
-              { regex: /[A-Z]/, description: "Deve conter ao menos uma letra maiúscula!" },
-              { regex: /[$*&@#]/, description: "Deve conter ao menos um caractere especial!" },
-              { regex: /^[0-9a-zA-Z$*&@#]{8,}$/, description: "Deve conter ao menos 8 caracteres!" }
+             validations.isRequired("senha"),
+             validations.atLeast1Digit,
+             validations.atLeastOneCapitalLetter,
+             validations.atLeastOneSpecialCharacter,
+             validations.atLeast8Chars,
             ]}
+            alt="A senha deve ter pelo menos um dígito, uma letra maiúscula e um caracter especial"
+            isRequired
           >
             Senha:
           </Input>
-          <Input 
-            type="password" 
-            name="confirmationPassword" 
-            value={confirmationPassword}
-            setValue={setConfirmationPassword}
+          <Input name="password-confirmation" type="password" value={confirmationPassword} setValue={setConfirmationPassword}
             validations={[
-              { regex: /.+/, description: "O campo confirmação de senha é obrigatório!" },
+              validations.isRequired("confirmação de senha"),
               { regex: password, description: "As senhas devem ser iguais!" }
             ]}
-            errorMessage="O campo confirmação de senha é obrigatório!"
             isRequired
           >
             Confirmação de Senha:
           </Input>
-          {!!thereIsNotification && <Text>{thereIsNotification}</Text>}
-  
+          { alertMessage && <Alert message={alertMessage.message} setAlertMessage={setAlertMessage} status={alertMessage.status} />}
+
           <Button 
-            // onClick={onSubmit}
             type="submit"
             alignSelf="center" 
             mt="10px"
@@ -101,7 +84,8 @@ export function RegisterUser() {
           >
             Salvar
           </Button>
-        </FormControl>
+        </Fieldset>
       </form>
-    )
-  }
+    </Flex>
+  )
+}
