@@ -40,6 +40,7 @@ export function CheckBoxTable({ id, label, items, checkedValues, setCheckedValue
                   }}
                   size='md'
                   colorScheme='green'
+                  value="check-all"
                 />
               </Th>
             </Tr>
@@ -57,6 +58,7 @@ export function CheckBoxTable({ id, label, items, checkedValues, setCheckedValue
                       setCheckedItems([...checkedItems.slice(0, idx++), e.target.checked, ...checkedItems.slice(idx++)]);
                       e.target.checked ? setCheckedValues([...checkedValues, value]) : setCheckedValues([...checkedValues.filter(v => v !== value)]);
                     }}
+                    value={value}
                   />
                 </Td>
                 <Td>{value}</Td>

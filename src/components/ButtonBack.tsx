@@ -3,13 +3,14 @@ import { IoIosReturnLeft } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 export interface IButtonBack {
+  id?: string;
   to: string;
   title?: string;
 }
 
-export function ButtonBack({ to, title }: IButtonBack): JSX.Element {
+export function ButtonBack({ id, to, title }: IButtonBack): JSX.Element {
   return (
-  <ChakraLink as={Link} to={to} alignSelf="flex-start" ml="10px" title={title}>
+  <ChakraLink id={id} as={Link} to={to} alignSelf="flex-start" ml="10px" title={title}>
     <Icon 
       as={IoIosReturnLeft} 
       size="15" 
