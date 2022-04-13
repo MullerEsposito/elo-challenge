@@ -11,7 +11,7 @@ describe("Register User",() => {
     cy.contains("Salvar").should("exist");
   });
 
-  it.only("should be required all fields.", () => {
+  it("should be required all fields.", () => {
     cy.visit("http://localhost:3000/users/register");
 
     cy.get("[name=user]").type(" ");
