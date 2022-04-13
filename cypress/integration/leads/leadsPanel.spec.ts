@@ -21,8 +21,8 @@ describe("Leads Panel", () => {
     cy.contains("Salvar").click();
     cy.visit("http://localhost:3000/leads");
 
-    cy.get("[#newlead@hotmail.com0]").dragTo();
-    const droppable = cy.get<HTMLElement>("[#newlead@hotmail.com]");
+    cy.get("[draggable-id=newlead@hotmail.com0]").move({ deltaX: 200, deltaY: 200 });
+    
 
   })
 });

@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@4tw/cypress-drag-drop@4teamwork/cypress-drag-drop":
+  version "2.1.0"
+  resolved "https://codeload.github.com/4teamwork/cypress-drag-drop/tar.gz/ba77954064786473c7c02d80222fa8c11a6ba8ce"
+
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
