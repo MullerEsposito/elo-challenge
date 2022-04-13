@@ -13,7 +13,9 @@ describe("Register Leads", () => {
   it("should be required all fields.", () => {
     cy.visit("http://localhost:3000/leads/register");
 
-    const saveButton = cy.contains("Salvar").click();
+    cy.get("[name=name]").type(" ");
+    cy.get("[name=name]").clear();
+    cy.contains("Salvar").click();
     
     cy.get("input:invalid").should("have.length", 3);
     cy.get<HTMLObjectElement>("[name=name]").then($el => $el[0].checkValidity()).should("be.false");
@@ -21,7 +23,9 @@ describe("Register Leads", () => {
     cy.get<HTMLObjectElement>("[name=email]").then($el => $el[0].checkValidity()).should("be.false");
 
     cy.get("[name=name]").type("New Lead");
-    saveButton.click();
+    cy.get("[name=phone]").type(" ");
+    cy.get("[name=phone]").clear();
+    cy.contains("Salvar").click();
 
     cy.get("input:invalid").should("have.length", 2);
     cy.get<HTMLObjectElement>("[name=name]").then($el => $el[0].checkValidity()).should("be.true");
@@ -29,20 +33,9 @@ describe("Register Leads", () => {
     cy.get<HTMLObjectElement>("[name=email]").then($el => $el[0].checkValidity()).should("be.false");
 
     cy.get("[name=phone]").type("38984171252");
-    saveButton.click();
-
-    cy.get("input:invalid").should("have.length", 1);
-    cy.get<HTMLObjectElement>("[name=name]").then($el => $el[0].checkValidity()).should("be.true");
-    cy.get<HTMLObjectElement>("[name=phone]").then($el => $el[0].checkValidity()).should("be.true");
-    cy.get<HTMLObjectElement>("[name=email]").then($el => $el[0].checkValidity()).should("be.false");
-
-    cy.get("[name=email]").type("newlead@hotmail.com");
-    saveButton.click();
-
-    cy.get("input:invalid").should("have.length", 0);
-    cy.get<HTMLObjectElement>("[name=name]").then($el => $el[0].checkValidity()).should("be.true");
-    cy.get<HTMLObjectElement>("[name=phone]").then($el => $el[0].checkValidity()).should("be.true");
-    cy.get<HTMLObjectElement>("[name=email]").then($el => $el[0].checkValidity()).should("be.true");
+    cy.get("[name=email]").type(" ");
+    cy.get("[name=email]").clear();
+    cy.contains("Salvar").click();    
   });
 
   it("should be possible to check the opportunities individually.", () => {
@@ -86,7 +79,27 @@ describe("Register Leads", () => {
     cy.contains("Lead cadastrado com sucesso!").should("exist");
   });
 
-  it.only("should be saved by default as potential lead.", () => {
+  it("shouldn't been able to register leads with the same e-mail.", () => {
+    cy.visit("http://localhost:3000/leads/register");
+
+    cy.get("[name=name]").type("New Lead");
+    cy.get("[name=phone]").type("38984171252");
+    cy.get("[name=email]").type("newlead@hotmail.com");
+    cy.get("[type=checkbox]").check(["RPA", "Analytics"], { force: true });
+
+    cy.contains("Salvar").click();
+
+    cy.get("[name=name]").type("New Lead 2");
+    cy.get("[name=phone]").type("38984171000");
+    cy.get("[name=email]").type("newlead@hotmail.com");
+    cy.get("[type=checkbox]").check(["BPM", "Analytics"], { force: true });
+    
+    cy.contains("Salvar").click();
+
+    cy.contains("Já existe").should("exist");
+  });
+
+  it("should be saved by default as potential lead.", () => {
     cy.visit("http://localhost:3000/leads/register");
 
     cy.get("[name=name]").type("New Lead");
