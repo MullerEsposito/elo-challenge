@@ -1,9 +1,10 @@
 import { Flex, Image, Link as ChakraLink } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
+import logo from "../assets/elo-logo-banner.jpg";
+
 export function Header(): JSX.Element {
   return (
-      
     <Flex 
         as="header"
         h="140px" maxW="none" 
@@ -13,11 +14,11 @@ export function Header(): JSX.Element {
     >
       <ChakraLink as={Link} to="/">
         <Image 
-            src="assets/elo-logo-banner.jpg" 
+            src={logo}
             w={['200px', '240px', '280px']}
             h={140}
             transition="width 1s" 
-            title="Logo da empresa contendo o nome ELOGROUP."
+            title="para página principal com logo da empresa contendo o nome ELOGROUP"
         />
       </ChakraLink>
     </Flex>
