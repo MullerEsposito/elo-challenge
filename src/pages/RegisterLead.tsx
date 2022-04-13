@@ -113,7 +113,7 @@ export function RegisterLead(): JSX.Element {
           </Flex>
         </form>
         <ButtonBack id="button-back" to="/leads" title="Voltar para a tela anterior" />
-        { alertMessage && <Alert message={alertMessage.message} setAlertMessage={setAlertMessage} status={alertMessage.status} />}
+        { alertMessage && <Alert color="black" message={alertMessage.message} setAlertMessage={setAlertMessage} status={alertMessage.status} />}
       </Flex>
     );
 };
